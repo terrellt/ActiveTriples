@@ -148,13 +148,15 @@ module ActiveTriples
         if should_persist_to_parent?(resource) && !resource.frozen?
           resource.set_persistence_strategy ParentStrategy
           resource.parent = parent
+        end
+        if resource.persistence_strategy.is_a? ParentStrategy
           resource.persist!
         end
         self.node_cache[resource.rdf_subject] = (object ? object : resource)
       end
 
         def should_persist_to_parent?(resource)
-          resource.persistence_strategy.is_a?(ParentStrategy) || persists_to_empty_repository?(resource)
+          persists_to_empty_repository?(resource)
         end
 
         def persists_to_empty_repository?(resource)
